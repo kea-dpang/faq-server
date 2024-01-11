@@ -3,6 +3,7 @@ package kea.dpang.faq.controller
 import kea.dpang.faq.base.SuccessResponse
 import kea.dpang.faq.dto.PostCreateRequestDto
 import kea.dpang.faq.dto.PostResponse
+import kea.dpang.faq.dto.PostUpdateRequestDto
 import kea.dpang.faq.service.PostService
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -65,5 +66,23 @@ class PostController(private val postService: PostService) {
         return ResponseEntity(successResponse, HttpStatus.OK)
     }
 
+    @PutMapping("/{postId}")
+    fun updatePost(
+        @RequestHeader("X-DPANG-CLIENT-ID") clientId: UUID,
+        @PathVariable postId: Long,
+        @RequestBody faqUpdateDto: PostUpdateRequestDto
+    ): ResponseEntity<SuccessResponse<PostResponse>> {
+
+        val updatedPost = postService.updatePost(clientId, postId, faqUpdateDto)
+
+        // 응답 성공 객체 생성
+        val successResponse = SuccessResponse(
+            status = HttpStatus.OK.value(),
+            message = "글을 성공적으로 수정되었습니다.",
+            data = updatedPost.toDto()
+        )
+
+        return ResponseEntity(successResponse, HttpStatus.OK)
+    }
 
 }

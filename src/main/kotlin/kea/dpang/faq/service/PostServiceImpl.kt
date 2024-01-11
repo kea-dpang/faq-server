@@ -1,6 +1,7 @@
 package kea.dpang.faq.service
 
 import kea.dpang.faq.dto.PostCreateRequestDto
+import kea.dpang.faq.dto.PostUpdateRequestDto
 import kea.dpang.faq.entity.Post
 import kea.dpang.faq.exception.CategoryNotFoundException
 import kea.dpang.faq.exception.PostNotFoundException
@@ -44,4 +45,26 @@ class PostServiceImpl(
     override fun getPostsByCategory(categoryId: Int): List<Post> {
         return postRepository.findByCategoryId(categoryId)
     }
+
+    override fun updatePost(clientId: UUID, postId: Long, postUpdateDto: PostUpdateRequestDto): Post {
+        // 게시글 조회. 없는 경우 예외 발생
+        val post = postRepository.findById(postId)
+            .orElseThrow { PostNotFoundException(postId) }
+
+        // 수정할 카테고리 조회. 없는 경우 예외 발생
+        val updatedCategoryId = postUpdateDto.categoryId
+        val updatedCategory = categoryRepository.findById(updatedCategoryId)
+            .orElseThrow { CategoryNotFoundException(updatedCategoryId) }
+
+        // 해당 요청은 관리자 전용 요청으로, 기존 작성자와 같지 않더라도 게시글 수정 요청을 할 수 있음
+        //  -> 사용자 비교 X
+
+        // 게시글 내용 업데이트
+        post.question = postUpdateDto.question
+        post.answer = postUpdateDto.answer
+        post.modifyCategory(updatedCategory)
+
+        return postRepository.save(post)
+    }
+
 }

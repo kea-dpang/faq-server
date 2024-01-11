@@ -6,6 +6,7 @@ import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.mockk
 import kea.dpang.faq.dto.PostCreateRequestDto
+import kea.dpang.faq.dto.PostUpdateRequestDto
 import kea.dpang.faq.entity.Category
 import kea.dpang.faq.entity.Post
 import kea.dpang.faq.exception.CategoryNotFoundException
@@ -112,6 +113,55 @@ class PostServiceImplUnitTest : BehaviorSpec({
             Then("PostNotFoundException이 발생해야 한다") {
                 shouldThrow<PostNotFoundException> {
                     postService.getPost(postId)
+                }
+            }
+        }
+    }
+
+    Given("사용자가 특정 게시글을 수정하려고 할 때") {
+        val userId = UUID.randomUUID()
+        val categoryId = 1
+        val category = Category("테스트", mutableListOf(), categoryId)
+        val postId = 1L
+        val post = Post(question = "질문1", answer = "답변1", category = category, authorId = userId, postId = postId)
+        val updateRequestDto = PostUpdateRequestDto(
+            question = "수정된 질문",
+            answer = "수정된 답변",
+            categoryId = categoryId
+        )
+
+        every { mockPostRepository.findById(any()) } returns Optional.of(post)
+        every { mockCategoryRepository.findById(any()) } returns Optional.of(category)
+        every { mockPostRepository.save(any()) } answers { firstArg() }
+
+        When("유효한 postId와 postUpdateDto가 주어졌을 때") {
+            val result = postService.updatePost(userId, postId, updateRequestDto)
+
+            Then("게시글이 성공적으로 수정되어야 한다") {
+                result.question shouldBe updateRequestDto.question
+                result.answer shouldBe updateRequestDto.answer
+                result.category shouldBe category
+                result.authorId shouldBe userId
+            }
+        }
+
+        When("존재하지 않는 postId가 주어졌을 때") {
+            every { mockPostRepository.findById(any()) } returns Optional.empty()
+
+            Then("PostNotFoundException이 발생해야 한다") {
+                shouldThrow<PostNotFoundException> {
+                    postService.updatePost(userId, postId, updateRequestDto)
+                }
+            }
+        }
+
+        When("존재하지 않는 categoryId가 주어졌을 때") {
+            every { mockPostRepository.findById(any()) } returns Optional.of(post)
+            every { mockCategoryRepository.findById(any()) } returns Optional.empty()
+
+            Then("CategoryNotFoundException이 발생해야 한다") {
+                shouldThrow<CategoryNotFoundException> {
+                    postService.updatePost(userId, postId, updateRequestDto)
                 }
             }
         }
