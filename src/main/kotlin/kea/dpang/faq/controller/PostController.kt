@@ -1,5 +1,6 @@
 package kea.dpang.faq.controller
 
+import kea.dpang.faq.base.BaseResponse
 import kea.dpang.faq.base.SuccessResponse
 import kea.dpang.faq.dto.PostCreateRequestDto
 import kea.dpang.faq.dto.PostResponse
@@ -80,6 +81,22 @@ class PostController(private val postService: PostService) {
             status = HttpStatus.OK.value(),
             message = "글을 성공적으로 수정되었습니다.",
             data = updatedPost.toDto()
+        )
+
+        return ResponseEntity(successResponse, HttpStatus.OK)
+    }
+
+    @DeleteMapping("/{postId}")
+    fun deletePost(
+        @PathVariable postId: Long
+    ): ResponseEntity<BaseResponse> {
+
+        postService.deletePost(postId)
+
+        // 응답 성공 객체 생성
+        val successResponse = BaseResponse(
+            status = HttpStatus.OK.value(),
+            message = "글을 성공적으로 삭제하였습니다."
         )
 
         return ResponseEntity(successResponse, HttpStatus.OK)

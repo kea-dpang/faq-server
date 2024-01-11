@@ -15,4 +15,6 @@ interface PostService {
 
     fun updatePost(clientId: UUID, postId: Long, postUpdateDto: PostUpdateRequestDto): Post
 
+    fun deletePost(postId: Long)
+
 }

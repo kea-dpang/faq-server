@@ -3,8 +3,7 @@ package kea.dpang.faq.service
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.BehaviorSpec
 import io.kotest.matchers.shouldBe
-import io.mockk.every
-import io.mockk.mockk
+import io.mockk.*
 import kea.dpang.faq.dto.PostCreateRequestDto
 import kea.dpang.faq.dto.PostUpdateRequestDto
 import kea.dpang.faq.entity.Category
@@ -162,6 +161,34 @@ class PostServiceImplUnitTest : BehaviorSpec({
             Then("CategoryNotFoundException이 발생해야 한다") {
                 shouldThrow<CategoryNotFoundException> {
                     postService.updatePost(userId, postId, updateRequestDto)
+                }
+            }
+        }
+    }
+
+    Given("사용자가 특정 게시글을 삭제하려고 할 때") {
+        val userId = UUID.randomUUID()
+        val categoryId = 1
+        val category = Category("테스트", mutableListOf(), categoryId)
+        val postId = 1L
+        val post = Post(question = "질문1", answer = "답변1", category = category, authorId = userId, postId = postId)
+
+        When("해당 id의 게시글이 존재할 때") {
+            every { mockPostRepository.findById(postId) } returns Optional.of(post)
+            every { mockPostRepository.delete(post) } just Runs
+
+            Then("해당 id의 게시글이 성공적으로 삭제되어야 한다") {
+                postService.deletePost(postId)
+                verify(exactly = 1) { mockPostRepository.delete(post) }
+            }
+        }
+
+        When("해당 id의 게시글이 존재하지 않을 때") {
+            every { mockPostRepository.findById(postId) } returns Optional.empty()
+
+            Then("PostNotFoundException이 발생해야 한다") {
+                shouldThrow<PostNotFoundException> {
+                    postService.deletePost(postId)
                 }
             }
         }
