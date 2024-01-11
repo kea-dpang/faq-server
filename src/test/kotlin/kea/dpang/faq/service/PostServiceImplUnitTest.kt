@@ -1,12 +1,15 @@
 package kea.dpang.faq.service
 
+import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.BehaviorSpec
 import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.mockk
 import kea.dpang.faq.dto.PostCreateRequestDto
 import kea.dpang.faq.entity.Category
+import kea.dpang.faq.entity.Post
 import kea.dpang.faq.exception.CategoryNotFoundException
+import kea.dpang.faq.exception.PostNotFoundException
 import kea.dpang.faq.repository.CategoryRepository
 import kea.dpang.faq.repository.PostRepository
 import java.util.*
@@ -52,4 +55,66 @@ class PostServiceImplUnitTest : BehaviorSpec({
             }
         }
     }
+
+    Given("사용자가 특정 카테고리의 모든 게시글을 조회하려고 할 때") {
+        val userId = UUID.randomUUID()
+        val categoryId = 1
+        val category = Category("테스트", mutableListOf(), categoryId)
+        val posts = listOf(
+            Post(question = "질문1", answer = "답변1", category = category, authorId = userId),
+            Post(question = "질문2", answer = "답변2", category = category, authorId = userId)
+        )
+
+        every { mockPostRepository.findByCategoryId(categoryId) } returns posts
+
+        When("카테고리에 속하는 게시글이 존재할 때") {
+            val result = postService.getPostsByCategory(categoryId)
+
+            Then("해당 카테고리의 모든 게시글이 반환되어야 한다") {
+                result.size shouldBe posts.size
+                result[0].question shouldBe posts[0].question
+                result[0].answer shouldBe posts[0].answer
+                result[1].question shouldBe posts[1].question
+                result[1].answer shouldBe posts[1].answer
+            }
+        }
+
+        When("카테고리에 속하는 게시글이 존재하지 않을 때") {
+            every { mockPostRepository.findByCategoryId(categoryId) } returns emptyList()
+
+            Then("빈 리스트가 반환되어야 한다") {
+                val result = postService.getPostsByCategory(categoryId)
+                result.size shouldBe 0
+            }
+        }
+    }
+
+    Given("사용자가 특정 게시글을 조회하려고 할 때") {
+        val userId = UUID.randomUUID()
+        val categoryId = 1
+        val category = Category("테스트", mutableListOf(), categoryId)
+        val postId = 1
+        val post = Post(question = "질문1", answer = "답변1", category = category, authorId = userId, postId = postId)
+
+        When("해당 id의 게시글이 존재할 때") {
+            every { mockPostRepository.findById(postId) } returns Optional.of(post)
+
+            Then("해당 id의 게시글이 반환되어야 한다") {
+                val result = postService.getPost(postId)
+                result.question shouldBe post.question
+                result.answer shouldBe post.answer
+            }
+        }
+
+        When("해당 id의 게시글이 존재하지 않을 때") {
+            every { mockPostRepository.findById(postId) } returns Optional.empty()
+
+            Then("PostNotFoundException이 발생해야 한다") {
+                shouldThrow<PostNotFoundException> {
+                    postService.getPost(postId)
+                }
+            }
+        }
+    }
+
 })

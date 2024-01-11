@@ -31,5 +31,39 @@ class PostController(private val postService: PostService) {
         return ResponseEntity(successResponse, HttpStatus.CREATED)
     }
 
+    @GetMapping("/{postId}")
+    fun readPost(
+        @PathVariable postId: Int
+    ): ResponseEntity<SuccessResponse<PostResponse>> {
+
+        val post = postService.getPost(postId)
+
+        // 응답 성공 객체 생성
+        val successResponse = SuccessResponse(
+            status = HttpStatus.OK.value(),
+            message = "글을 성공적으로 조회하였습니다.",
+            data = post.toDto()
+        )
+
+        return ResponseEntity(successResponse, HttpStatus.OK)
+    }
+
+    @GetMapping("/category/{categoryId}")
+    fun readPostsByCategory(
+        @PathVariable categoryId: Int
+    ): ResponseEntity<SuccessResponse<List<PostResponse>>> {
+
+        val posts = postService.getPostsByCategory(categoryId)
+
+        // 응답 성공 객체 생성
+        val successResponse = SuccessResponse(
+            status = HttpStatus.OK.value(),
+            message = "카테고리별 글을 성공적으로 조회하였습니다.",
+            data = posts.map { it.toDto() }
+        )
+
+        return ResponseEntity(successResponse, HttpStatus.OK)
+    }
+
 
 }

@@ -3,6 +3,7 @@ package kea.dpang.faq.service
 import kea.dpang.faq.dto.PostCreateRequestDto
 import kea.dpang.faq.entity.Post
 import kea.dpang.faq.exception.CategoryNotFoundException
+import kea.dpang.faq.exception.PostNotFoundException
 import kea.dpang.faq.repository.CategoryRepository
 import kea.dpang.faq.repository.PostRepository
 import org.springframework.stereotype.Service
@@ -34,5 +35,13 @@ class PostServiceImpl(
 
         // Post를 저장하고 반환한다.
         return postRepository.save(post)
+    }
+
+    override fun getPost(postId: Int): Post {
+        return postRepository.findById(postId).orElseThrow { PostNotFoundException(postId) }
+    }
+
+    override fun getPostsByCategory(categoryId: Int): List<Post> {
+        return postRepository.findByCategoryId(categoryId)
     }
 }

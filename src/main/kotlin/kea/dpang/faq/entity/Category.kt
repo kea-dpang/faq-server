@@ -13,7 +13,7 @@ class Category(
     val postLists: MutableList<Post> = mutableListOf(), // FAQ 게시글 리스트
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "category_id")
     val id: Int? // 카테고리 식별자
 
