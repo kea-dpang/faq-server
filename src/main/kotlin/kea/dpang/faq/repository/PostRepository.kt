@@ -5,7 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Repository
 
 @Repository
-interface PostRepository : JpaRepository<Post, Int> {
+interface PostRepository : JpaRepository<Post, Long> {
 
     fun findByCategoryId(categoryId: Int): List<Post>
 }

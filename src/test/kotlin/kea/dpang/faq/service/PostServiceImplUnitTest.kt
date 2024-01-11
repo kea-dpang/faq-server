@@ -93,7 +93,7 @@ class PostServiceImplUnitTest : BehaviorSpec({
         val userId = UUID.randomUUID()
         val categoryId = 1
         val category = Category("테스트", mutableListOf(), categoryId)
-        val postId = 1
+        val postId = 1L
         val post = Post(question = "질문1", answer = "답변1", category = category, authorId = userId, postId = postId)
 
         When("해당 id의 게시글이 존재할 때") {

@@ -37,7 +37,7 @@ class PostServiceImpl(
         return postRepository.save(post)
     }
 
-    override fun getPost(postId: Int): Post {
+    override fun getPost(postId: Long): Post {
         return postRepository.findById(postId).orElseThrow { PostNotFoundException(postId) }
     }
 

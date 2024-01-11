@@ -33,7 +33,7 @@ class PostController(private val postService: PostService) {
 
     @GetMapping("/{postId}")
     fun readPost(
-        @PathVariable postId: Int
+        @PathVariable postId: Long
     ): ResponseEntity<SuccessResponse<PostResponse>> {
 
         val post = postService.getPost(postId)

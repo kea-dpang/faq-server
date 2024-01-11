@@ -25,7 +25,7 @@ class Post(
     @Id
     @Column(name = "post_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    var postId: Int? = null // FAQ 게시글 식별자
+    var postId: Long? = null // FAQ 게시글 식별자
 
 ) : BaseEntity() {
 

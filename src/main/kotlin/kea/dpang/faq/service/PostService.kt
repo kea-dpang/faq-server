@@ -8,7 +8,7 @@ interface PostService {
 
     fun createPost(userId: UUID, postCreateDto: PostCreateRequestDto): Post
 
-    fun getPost(postId: Int): Post
+    fun getPost(postId: Long): Post
 
     fun getPostsByCategory(categoryId: Int): List<Post>
 
