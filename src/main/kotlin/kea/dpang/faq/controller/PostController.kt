@@ -38,7 +38,7 @@ class PostController(private val postService: PostService) {
         @PathVariable postId: Long
     ): ResponseEntity<SuccessResponse<PostResponse>> {
 
-        val post = postService.getPost(postId)
+        val post = postService.getPostById(postId)
 
         // 응답 성공 객체 생성
         val successResponse = SuccessResponse(
@@ -50,12 +50,12 @@ class PostController(private val postService: PostService) {
         return ResponseEntity(successResponse, HttpStatus.OK)
     }
 
-    @GetMapping("/category/{categoryId}")
+    @GetMapping("/category/{categoryName}")
     fun readPostsByCategory(
-        @PathVariable categoryId: Int
+        @PathVariable categoryName: String
     ): ResponseEntity<SuccessResponse<List<PostResponse>>> {
 
-        val posts = postService.getPostsByCategory(categoryId)
+        val posts = postService.getPostsByCategoryName(categoryName.uppercase())
 
         // 응답 성공 객체 생성
         val successResponse = SuccessResponse(
