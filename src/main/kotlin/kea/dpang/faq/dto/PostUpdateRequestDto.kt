@@ -1,7 +1,7 @@
 package kea.dpang.faq.dto
 
 data class PostUpdateRequestDto(
-    val categoryId: Int,
+    val categoryName: String,
     val question: String,
     val answer: String
 )
