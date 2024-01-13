@@ -8,6 +8,7 @@ import kea.dpang.faq.dto.PostUpdateRequestDto
 import kea.dpang.faq.service.PostService
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.*
 import java.util.*
 
@@ -15,6 +16,7 @@ import java.util.*
 @RequestMapping("/api/posts")
 class PostController(private val postService: PostService) {
 
+    @PreAuthorize("hasRole('ADMIN') or hasRole('SUPER_ADMIN')")
     @PostMapping
     fun createPost(
         @RequestHeader("X-DPANG-CLIENT-ID") clientId: UUID,
@@ -33,6 +35,7 @@ class PostController(private val postService: PostService) {
         return ResponseEntity(successResponse, HttpStatus.CREATED)
     }
 
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN','SUPER_ADMIN')")
     @GetMapping("/{postId}")
     fun readPost(
         @PathVariable postId: Long
@@ -50,6 +53,7 @@ class PostController(private val postService: PostService) {
         return ResponseEntity(successResponse, HttpStatus.OK)
     }
 
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN','SUPER_ADMIN')")
     @GetMapping("/category/{categoryName}")
     fun readPostsByCategory(
         @PathVariable categoryName: String
@@ -67,6 +71,7 @@ class PostController(private val postService: PostService) {
         return ResponseEntity(successResponse, HttpStatus.OK)
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN','SUPER_ADMIN')")
     @PutMapping("/{postId}")
     fun updatePost(
         @RequestHeader("X-DPANG-CLIENT-ID") clientId: UUID,
@@ -86,6 +91,7 @@ class PostController(private val postService: PostService) {
         return ResponseEntity(successResponse, HttpStatus.OK)
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN','SUPER_ADMIN')")
     @DeleteMapping("/{postId}")
     fun deletePost(
         @PathVariable postId: Long
