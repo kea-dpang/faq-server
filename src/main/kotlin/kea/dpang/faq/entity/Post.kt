@@ -23,7 +23,7 @@ class Post(
     var authorId: UUID, // 작성자 식별자
 
     @Id
-    @Column(name = "post_id")
+    @Column(name = "faq_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long? = null // FAQ 게시글 식별자
 
