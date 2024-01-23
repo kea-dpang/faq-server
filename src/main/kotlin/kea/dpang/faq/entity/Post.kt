@@ -2,7 +2,7 @@ package kea.dpang.faq.entity
 
 import jakarta.persistence.*
 import kea.dpang.base.BaseEntity
-import kea.dpang.faq.dto.PostResponse
+import kea.dpang.faq.dto.PostResponseDto
 import java.util.*
 
 @Entity
@@ -29,8 +29,8 @@ class Post(
 
 ) : BaseEntity() {
 
-    fun toDto(): PostResponse {
-        return PostResponse(
+    fun toDto(): PostResponseDto {
+        return PostResponseDto(
             postId = this.id!!,
             question = this.question,
             answer = this.answer,
