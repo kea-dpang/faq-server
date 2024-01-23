@@ -1,5 +1,8 @@
 package kea.dpang.faq.controller
 
+import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.Parameter
+import io.swagger.v3.oas.annotations.tags.Tag
 import kea.dpang.faq.base.BaseResponse
 import kea.dpang.faq.base.SuccessResponse
 import kea.dpang.faq.dto.PostCreateRequestDto
@@ -13,13 +16,17 @@ import org.springframework.web.bind.annotation.*
 import java.util.*
 
 @RestController
+@Tag(name = "FAQ")
 @RequestMapping("/api/posts")
 class PostController(private val postService: PostService) {
 
+    @Operation(summary = "게시글 작성", description = "관리자 권한을 가진 사용자가 새로운 게시글을 생성합니다.")
     @PreAuthorize("hasRole('ADMIN') or hasRole('SUPER_ADMIN')")
     @PostMapping
     fun createPost(
+        @Parameter(hidden = true)
         @RequestHeader("X-DPANG-CLIENT-ID") clientId: UUID,
+        @Parameter(description = "포스트 생성 정보")
         @RequestBody postCreateDto: PostCreateRequestDto
     ): ResponseEntity<SuccessResponse<PostResponse>> {
 
@@ -35,9 +42,11 @@ class PostController(private val postService: PostService) {
         return ResponseEntity(successResponse, HttpStatus.CREATED)
     }
 
+    @Operation(summary = "게시글 조회", description = "특정 게시글을 조회합니다.")
     @PreAuthorize("hasAnyRole('USER', 'ADMIN','SUPER_ADMIN')")
     @GetMapping("/{postId}")
     fun readPost(
+        @Parameter(description = "조회할 포스트의 ID")
         @PathVariable postId: Long
     ): ResponseEntity<SuccessResponse<PostResponse>> {
 
@@ -53,9 +62,11 @@ class PostController(private val postService: PostService) {
         return ResponseEntity(successResponse, HttpStatus.OK)
     }
 
+    @Operation(summary = "카테고리별 게시글 조회", description = "특정 카테고리의 게시글을 조회합니다.")
     @PreAuthorize("hasAnyRole('USER', 'ADMIN','SUPER_ADMIN')")
     @GetMapping("/category/{categoryName}")
     fun readPostsByCategory(
+        @Parameter(description = "조회할 카테고리")
         @PathVariable categoryName: String
     ): ResponseEntity<SuccessResponse<List<PostResponse>>> {
 
@@ -71,11 +82,15 @@ class PostController(private val postService: PostService) {
         return ResponseEntity(successResponse, HttpStatus.OK)
     }
 
+    @Operation(summary = "게시글 수정", description = "관리자 권한을 가진 사용자가 특정 게시글을 수정합니다.")
     @PreAuthorize("hasAnyRole('ADMIN','SUPER_ADMIN')")
     @PutMapping("/{postId}")
     fun updatePost(
+        @Parameter(hidden = true)
         @RequestHeader("X-DPANG-CLIENT-ID") clientId: UUID,
+        @Parameter(description = "수정할 포스트의 ID")
         @PathVariable postId: Long,
+        @Parameter(description = "포스트 수정 정보")
         @RequestBody faqUpdateDto: PostUpdateRequestDto
     ): ResponseEntity<SuccessResponse<PostResponse>> {
 
@@ -91,9 +106,11 @@ class PostController(private val postService: PostService) {
         return ResponseEntity(successResponse, HttpStatus.OK)
     }
 
+    @Operation(summary = "게시글 삭제", description = "관리자 권한을 가진 사용자가 특정 게시글을 삭제합니다.")
     @PreAuthorize("hasAnyRole('ADMIN','SUPER_ADMIN')")
     @DeleteMapping("/{postId}")
     fun deletePost(
+        @Parameter(description = "삭제할 게시글의 ID")
         @PathVariable postId: Long
     ): ResponseEntity<BaseResponse> {
 

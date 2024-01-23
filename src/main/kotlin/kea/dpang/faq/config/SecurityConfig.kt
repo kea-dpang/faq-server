@@ -28,7 +28,7 @@ class SecurityConfig {
         return WebSecurityCustomizer { web ->
             web.ignoring()
                 .requestMatchers(
-                    "/api-document/**",
+                    "/v3/api-docs/**",
                     "/swagger-ui/**"
                 )
         }
