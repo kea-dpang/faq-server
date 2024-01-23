@@ -6,7 +6,7 @@ import io.swagger.v3.oas.annotations.tags.Tag
 import kea.dpang.faq.base.BaseResponse
 import kea.dpang.faq.base.SuccessResponse
 import kea.dpang.faq.dto.PostCreateRequestDto
-import kea.dpang.faq.dto.PostResponse
+import kea.dpang.faq.dto.PostResponseDto
 import kea.dpang.faq.dto.PostUpdateRequestDto
 import kea.dpang.faq.service.PostService
 import org.springframework.http.HttpStatus
@@ -28,7 +28,7 @@ class PostController(private val postService: PostService) {
         @RequestHeader("X-DPANG-CLIENT-ID") clientId: UUID,
         @Parameter(description = "포스트 생성 정보")
         @RequestBody postCreateDto: PostCreateRequestDto
-    ): ResponseEntity<SuccessResponse<PostResponse>> {
+    ): ResponseEntity<SuccessResponse<PostResponseDto>> {
 
         val createdPost = postService.createPost(clientId, postCreateDto)
 
@@ -48,7 +48,7 @@ class PostController(private val postService: PostService) {
     fun readPost(
         @Parameter(description = "조회할 포스트의 ID")
         @PathVariable postId: Long
-    ): ResponseEntity<SuccessResponse<PostResponse>> {
+    ): ResponseEntity<SuccessResponse<PostResponseDto>> {
 
         val post = postService.getPostById(postId)
 
@@ -68,7 +68,7 @@ class PostController(private val postService: PostService) {
     fun readPostsByCategory(
         @Parameter(description = "조회할 카테고리")
         @PathVariable categoryName: String
-    ): ResponseEntity<SuccessResponse<List<PostResponse>>> {
+    ): ResponseEntity<SuccessResponse<List<PostResponseDto>>> {
 
         val posts = postService.getPostsByCategoryName(categoryName.uppercase())
 
@@ -92,7 +92,7 @@ class PostController(private val postService: PostService) {
         @PathVariable postId: Long,
         @Parameter(description = "포스트 수정 정보")
         @RequestBody faqUpdateDto: PostUpdateRequestDto
-    ): ResponseEntity<SuccessResponse<PostResponse>> {
+    ): ResponseEntity<SuccessResponse<PostResponseDto>> {
 
         val updatedPost = postService.updatePost(clientId, postId, faqUpdateDto)
 
