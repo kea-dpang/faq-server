@@ -36,7 +36,7 @@ class PostController(private val postService: PostService) {
         val successResponse = SuccessResponse(
             status = HttpStatus.CREATED.value(),
             message = "글이 성공적으로 작성되었습니다.",
-            data = createdPost.toDto()
+            data = PostResponseDto.from(createdPost)
         )
 
         return ResponseEntity(successResponse, HttpStatus.CREATED)
@@ -56,7 +56,7 @@ class PostController(private val postService: PostService) {
         val successResponse = SuccessResponse(
             status = HttpStatus.OK.value(),
             message = "글을 성공적으로 조회하였습니다.",
-            data = post.toDto()
+            data = PostResponseDto.from(post)
         )
 
         return ResponseEntity(successResponse, HttpStatus.OK)
@@ -76,7 +76,7 @@ class PostController(private val postService: PostService) {
         val successResponse = SuccessResponse(
             status = HttpStatus.OK.value(),
             message = "카테고리별 글을 성공적으로 조회하였습니다.",
-            data = posts.map { it.toDto() }
+            data = posts.map { PostResponseDto.from(it) }
         )
 
         return ResponseEntity(successResponse, HttpStatus.OK)
@@ -100,7 +100,7 @@ class PostController(private val postService: PostService) {
         val successResponse = SuccessResponse(
             status = HttpStatus.OK.value(),
             message = "글을 성공적으로 수정되었습니다.",
-            data = updatedPost.toDto()
+            data = PostResponseDto.from(updatedPost)
         )
 
         return ResponseEntity(successResponse, HttpStatus.OK)

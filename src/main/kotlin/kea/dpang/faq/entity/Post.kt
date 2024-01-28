@@ -2,7 +2,6 @@ package kea.dpang.faq.entity
 
 import jakarta.persistence.*
 import kea.dpang.faq.base.BaseEntity
-import kea.dpang.faq.dto.PostResponseDto
 import java.util.*
 
 @Entity
@@ -27,17 +26,4 @@ class Post(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long? = null // FAQ 게시글 식별자
 
-) : BaseEntity() {
-
-    fun toDto(): PostResponseDto {
-        return PostResponseDto(
-            postId = this.id!!,
-            question = this.question,
-            answer = this.answer,
-            categoryName = this.category.name,
-            authorId = this.authorId,
-            createdAt = this.createdAt!!
-        )
-    }
-
-}
+) : BaseEntity()
