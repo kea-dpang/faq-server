@@ -1,4 +1,4 @@
-package kea.dpang.base
+package kea.dpang.faq.base
 
 import jakarta.persistence.Column
 import jakarta.persistence.MappedSuperclass
