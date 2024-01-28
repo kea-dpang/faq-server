@@ -12,11 +12,11 @@ import org.springframework.transaction.annotation.Transactional
 import java.util.*
 
 @Service
+@Transactional
 class PostServiceImpl(
     private val postRepository: PostRepository
 ) : PostService {
 
-    @Transactional
     override fun createPost(userId: UUID, postCreateDto: PostCreateRequestDto): Post {
         // 새로운 게시글을 생성한다.
         val post = Post(
@@ -30,10 +30,12 @@ class PostServiceImpl(
         return postRepository.save(post)
     }
 
+    @Transactional(readOnly = true)
     override fun getPostById(postId: Long): Post {
         return postRepository.findById(postId).orElseThrow { PostNotFoundException(postId) }
     }
 
+    @Transactional(readOnly = true)
     override fun getPostsByCategoryName(categoryName: String): List<Post> {
         // 검색할 카테고리 조회. 없는 경우 예외 발생
         val category = Category.entries.find { it.name == categoryName.uppercase() }
