@@ -8,6 +8,7 @@ import kea.dpang.faq.base.SuccessResponse
 import kea.dpang.faq.dto.PostCreateRequestDto
 import kea.dpang.faq.dto.PostResponseDto
 import kea.dpang.faq.dto.PostUpdateRequestDto
+import kea.dpang.faq.entity.Category
 import kea.dpang.faq.service.PostService
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -64,13 +65,13 @@ class PostController(private val postService: PostService) {
 
     @Operation(summary = "카테고리별 게시글 조회", description = "특정 카테고리의 게시글을 조회합니다.")
     @PreAuthorize("hasAnyRole('USER', 'ADMIN','SUPER_ADMIN')")
-    @GetMapping("/category/{categoryName}")
+    @GetMapping("/category/{category}")
     fun readPostsByCategory(
         @Parameter(description = "조회할 카테고리")
-        @PathVariable categoryName: String
+        @PathVariable category: Category
     ): ResponseEntity<SuccessResponse<List<PostResponseDto>>> {
 
-        val posts = postService.getPostsByCategoryName(categoryName.uppercase())
+        val posts = postService.getPostsByCategoryName(category)
 
         // 응답 성공 객체 생성
         val successResponse = SuccessResponse(

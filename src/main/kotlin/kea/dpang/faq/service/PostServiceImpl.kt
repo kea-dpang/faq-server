@@ -4,7 +4,6 @@ import kea.dpang.faq.dto.PostCreateRequestDto
 import kea.dpang.faq.dto.PostUpdateRequestDto
 import kea.dpang.faq.entity.Category
 import kea.dpang.faq.entity.Post
-import kea.dpang.faq.exception.CategoryNotFoundException
 import kea.dpang.faq.exception.PostNotFoundException
 import kea.dpang.faq.repository.PostRepository
 import org.springframework.stereotype.Service
@@ -36,11 +35,7 @@ class PostServiceImpl(
     }
 
     @Transactional(readOnly = true)
-    override fun getPostsByCategoryName(categoryName: String): List<Post> {
-        // 검색할 카테고리 조회. 없는 경우 예외 발생
-        val category = Category.entries.find { it.name == categoryName.uppercase() }
-            ?: throw CategoryNotFoundException(categoryName)
-
+    override fun getPostsByCategoryName(category: Category): List<Post> {
         return postRepository.findByCategory(category)
     }
 
