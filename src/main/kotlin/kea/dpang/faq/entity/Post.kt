@@ -2,6 +2,7 @@ package kea.dpang.faq.entity
 
 import jakarta.persistence.*
 import kea.dpang.faq.base.BaseEntity
+import kea.dpang.faq.dto.PostUpdateRequestDto
 import java.util.*
 
 @Entity
@@ -26,4 +27,11 @@ class Post(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long? = null // FAQ 게시글 식별자
 
-) : BaseEntity()
+) : BaseEntity() {
+
+    fun update(dto: PostUpdateRequestDto) {
+        this.question = dto.question
+        this.answer = dto.answer
+        this.category = dto.category
+    }
+}

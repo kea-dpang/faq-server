@@ -51,9 +51,7 @@ class PostServiceImpl(
         //  -> 사용자 비교 X
 
         // 게시글 내용 업데이트
-        post.question = postUpdateDto.question
-        post.answer = postUpdateDto.answer
-        post.category = postUpdateDto.category
+        post.update(postUpdateDto)
 
         return postRepository.save(post)
     }
