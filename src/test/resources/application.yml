@@ -10,3 +10,7 @@ spring:
       ddl-auto: create
 
     show-sql: true
+    
+  cloud:
+    discovery:
+      enabled: false

@@ -2,12 +2,12 @@ package kea.dpang.faq.entity
 
 import jakarta.persistence.*
 import kea.dpang.faq.base.BaseEntity
-import kea.dpang.faq.dto.PostUpdateRequestDto
+import kea.dpang.faq.dto.FAQUpdateRequestDto
 import java.util.*
 
 @Entity
 @Table(name = "faq")
-class Post(
+class FAQ(
 
     @Column(name = "question", nullable = false)
     var question: String, // 질문
@@ -29,7 +29,7 @@ class Post(
 
 ) : BaseEntity() {
 
-    fun update(dto: PostUpdateRequestDto) {
+    fun update(dto: FAQUpdateRequestDto) {
         this.question = dto.question
         this.answer = dto.answer
         this.category = dto.category
