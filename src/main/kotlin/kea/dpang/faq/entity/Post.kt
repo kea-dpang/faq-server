@@ -1,7 +1,7 @@
 package kea.dpang.faq.entity
 
 import jakarta.persistence.*
-import kea.dpang.base.BaseEntity
+import kea.dpang.faq.base.BaseEntity
 import kea.dpang.faq.dto.PostResponseDto
 import java.util.*
 
