@@ -17,7 +17,7 @@ import java.util.*
 
 @RestController
 @Tag(name = "FAQ")
-@RequestMapping("/api/posts")
+@RequestMapping("/api/faq")
 class PostController(private val postService: PostService) {
 
     @Operation(summary = "게시글 작성", description = "관리자 권한을 가진 사용자가 새로운 게시글을 생성합니다.")
