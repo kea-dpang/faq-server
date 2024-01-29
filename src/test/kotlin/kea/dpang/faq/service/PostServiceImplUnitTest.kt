@@ -9,6 +9,7 @@ import kea.dpang.faq.entity.FAQ
 import kea.dpang.faq.exception.FAQNotFoundException
 import kea.dpang.faq.repository.FAQRepository
 import java.util.*
+import kotlin.random.Random
 
 class PostServiceImplUnitTest : BehaviorSpec({
 
@@ -16,7 +17,7 @@ class PostServiceImplUnitTest : BehaviorSpec({
     val postService = FAQServiceImpl(mockFAQRepository)
 
     Given("사용자가 특정 게시글을 조회하려고 할 때") {
-        val userId = UUID.randomUUID()
+        val userId = Random.nextLong()
         val category = Category.ETC
         val postId = 1L
         val FAQ = FAQ(

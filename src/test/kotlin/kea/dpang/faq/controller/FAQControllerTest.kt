@@ -21,6 +21,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import java.time.LocalDateTime
 import java.util.*
+import kotlin.random.Random
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -35,7 +36,7 @@ class FAQControllerTest {
     @Autowired
     lateinit var objectMapper: ObjectMapper
 
-    private val clientId = UUID.randomUUID()
+    private val clientId = Random.nextLong()
 
     private val postCreateDto = FAQCreateRequestDto(
         question = "Kotest란 무엇인가요?",
@@ -59,7 +60,7 @@ class FAQControllerTest {
             question = postCreateDto.question,
             answer = postCreateDto.answer,
             category = postCreateDto.category,
-            authorId = UUID.randomUUID()
+            authorId = Random.nextLong()
 
         ).apply {
             id = faqId

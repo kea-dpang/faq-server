@@ -16,7 +16,6 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.*
-import java.util.*
 
 @RestController
 @Tag(name = "FAQ")
@@ -28,7 +27,7 @@ class FAQController(private val faqService: FAQService) {
     @PostMapping
     fun createFAQ(
         @Parameter(hidden = true)
-        @RequestHeader("X-DPANG-CLIENT-ID") clientId: UUID,
+        @RequestHeader("X-DPANG-CLIENT-ID") clientId: Long,
         @Parameter(description = "FAQ 생성 정보")
         @RequestBody faqCreateDto: FAQCreateRequestDto
     ): ResponseEntity<SuccessResponse<FAQResponseDto>> {
@@ -107,7 +106,7 @@ class FAQController(private val faqService: FAQService) {
     @PutMapping("/{faqId}")
     fun updateFAQ(
         @Parameter(hidden = true)
-        @RequestHeader("X-DPANG-CLIENT-ID") clientId: UUID,
+        @RequestHeader("X-DPANG-CLIENT-ID") clientId: Long,
         @Parameter(description = "수정할 FAQ의 ID")
         @PathVariable faqId: Long,
         @Parameter(description = "FAQ 수정 정보")

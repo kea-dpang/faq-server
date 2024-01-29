@@ -3,7 +3,6 @@ package kea.dpang.faq.entity
 import jakarta.persistence.*
 import kea.dpang.faq.base.BaseEntity
 import kea.dpang.faq.dto.FAQUpdateRequestDto
-import java.util.*
 
 @Entity
 @Table(name = "faq")
@@ -20,7 +19,7 @@ class FAQ(
     var category: Category, // 카테고리
 
     @Column(name = "author_id", nullable = false)
-    var authorId: UUID, // 작성자 식별자
+    var authorId: Long, // 작성자 식별자
 
     @Id
     @Column(name = "faq_id")
