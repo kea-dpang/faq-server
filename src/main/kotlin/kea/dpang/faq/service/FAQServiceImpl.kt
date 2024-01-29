@@ -11,7 +11,6 @@ import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import java.util.*
 
 @Service
 @Transactional
@@ -21,7 +20,7 @@ class FAQServiceImpl(
 
     private val logger = LoggerFactory.getLogger(FAQServiceImpl::class.java)
 
-    override fun createFAQ(userId: UUID, faqCreateRequestDto: FAQCreateRequestDto): FAQ {
+    override fun createFAQ(userId: Long, faqCreateRequestDto: FAQCreateRequestDto): FAQ {
         logger.info("[FAQ 생성] 사용자 ID: $userId, FAQ 정보: $faqCreateRequestDto")
 
         // 새로운 게시글을 생성한다.
@@ -67,7 +66,7 @@ class FAQServiceImpl(
         }
     }
 
-    override fun updateFAQ(clientId: UUID, faqId: Long, faqUpdateRequestDto: FAQUpdateRequestDto): FAQ {
+    override fun updateFAQ(clientId: Long, faqId: Long, faqUpdateRequestDto: FAQUpdateRequestDto): FAQ {
         logger.info("[FAQ 수정] 클라이언트 ID: $clientId, 수정 요청 FAQ ID: $faqId, 수정 정보: $faqUpdateRequestDto")
 
         // 게시글 조회. 없는 경우 예외 발생

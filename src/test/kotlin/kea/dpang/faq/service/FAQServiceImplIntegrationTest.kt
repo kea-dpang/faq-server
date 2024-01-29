@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.transaction.annotation.Transactional
-import java.util.*
+import kotlin.random.Random
 
 @SpringBootTest
 @Transactional
@@ -21,7 +21,7 @@ class FAQServiceImplIntegrationTest {
     @Test
     fun `게시글 생성 테스트`() {
         // Given: 새로운 게시글을 생성하기 위한 DTO로
-        val userId = UUID.randomUUID()
+        val userId = Random.nextLong()
         val postCreateDto = FAQCreateRequestDto(Category.FAQ, "질문", "답변")
 
         // When: 새로운 게시글을 생성했을 때
@@ -45,7 +45,7 @@ class FAQServiceImplIntegrationTest {
     @Test
     fun `특정 카테고리 게시글 검색 테스트`() {
         // Given: FAQ 카테고리, Notice 카테고리에 각각 한 개의 게시글이 존재할 때
-        val userId = UUID.randomUUID()
+        val userId = Random.nextLong()
         val postCreateDto1 = FAQCreateRequestDto(Category.FAQ, "질문1", "답변1")
         val postCreateDto2 = FAQCreateRequestDto(Category.MEMBER, "질문2", "답변2")
         postService.createFAQ(userId, postCreateDto1)
@@ -69,7 +69,7 @@ class FAQServiceImplIntegrationTest {
     @Test
     fun `게시글 수정 테스트`() {
         // Given: 게시글을
-        val userId = UUID.randomUUID()
+        val userId = Random.nextLong()
         val postCreateDto = FAQCreateRequestDto(Category.FAQ, "질문", "답변")
         val createdPost = postService.createFAQ(userId, postCreateDto)
         val postUpdateDto = FAQUpdateRequestDto(Category.FAQ, "수정된 질문", "수정된 답변")
@@ -93,7 +93,7 @@ class FAQServiceImplIntegrationTest {
     @Test
     fun `게시글 삭제 테스트`() {
         // Given: 게시글을
-        val userId = UUID.randomUUID()
+        val userId = Random.nextLong()
         val postCreateDto = FAQCreateRequestDto(Category.FAQ, "질문", "답변")
         val createdPost = postService.createFAQ(userId, postCreateDto)
 
