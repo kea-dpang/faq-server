@@ -64,6 +64,10 @@ class FAQController(private val faqService: FAQService) {
         return ResponseEntity(successResponse, HttpStatus.OK)
     }
 
+    @Deprecated(
+        message = "카테고리별 FAQ 조회로 대체되었습니다.",
+        replaceWith = ReplaceWith("readFAQsByCategory(pageable, null)")
+    )
     @Operation(summary = "FAQ 전체 조회", description = "모든 FAQ를 페이지 단위로 조회합니다.")
     @PreAuthorize("hasAnyRole('USER', 'ADMIN','SUPER_ADMIN')")
     @GetMapping
@@ -81,21 +85,26 @@ class FAQController(private val faqService: FAQService) {
         return ResponseEntity(successResponse, HttpStatus.OK)
     }
 
-    @Operation(summary = "카테고리별 FAQ 조회", description = "특정 카테고리의 FAQ를 조회합니다.")
+    @Operation(summary = "카테고리별 FAQ 조회", description = "특정 카테고리의 FAQ를 페이지네이션하여 조회합니다. 카테고리가 지정되지 않으면 모든 FAQ를 페이지네이션하여 조회합니다.")
     @PreAuthorize("hasAnyRole('USER', 'ADMIN','SUPER_ADMIN')")
-    @GetMapping("/category/{category}")
+    @GetMapping("/category")
     fun readFAQsByCategory(
-        @Parameter(description = "조회할 카테고리")
-        @PathVariable category: Category
-    ): ResponseEntity<SuccessResponse<List<FAQResponseDto>>> {
+        @Parameter(description = "조회할 카테고리", required = false)
+        @RequestParam(required = false) category: Category?,
+        @Parameter(description = "페이지네이션 정보")
+        pageable: Pageable
+    ): ResponseEntity<SuccessResponse<Page<FAQResponseDto>>> {
 
-        val faqs = faqService.getFAQsByCategory(category)
+        val faqsPage = category?.let {
+            faqService.getFAQsByCategory(it, pageable)
+        } ?: faqService.getAllFAQs(pageable)
+
 
         // 응답 성공 객체 생성
         val successResponse = SuccessResponse(
             status = HttpStatus.OK.value(),
             message = "카테고리별 FAQ를 성공적으로 조회하였습니다.",
-            data = faqs.map { FAQResponseDto.from(it) }
+            data = faqsPage.map { FAQResponseDto.from(it) } // 페이지네이션된 결과를 DTO로 변환
         )
 
         return ResponseEntity(successResponse, HttpStatus.OK)
