@@ -58,11 +58,11 @@ class FAQServiceImpl(
     }
 
     @Transactional(readOnly = true)
-    override fun getFAQsByCategory(category: Category): List<FAQ> {
+    override fun getFAQsByCategory(category: Category, pageable: Pageable): Page<FAQ> {
         logger.info("[카테고리별 FAQ 조회] 조회 요청 카테고리: $category")
 
-        return faqRepository.findByCategory(category).also {
-            logger.info("[카테고리별 FAQ 조회 완료] 조회된 FAQ 개수: ${it.size}")
+        return faqRepository.findByCategory(category, pageable).also {
+            logger.info("[카테고리별 FAQ 조회 완료] 조회된 FAQ 페이지: ${it.number + 1}, 페이지 당 FAQ 개수: ${it.numberOfElements}, 전체 FAQ 개수: ${it.totalElements}")
         }
     }
 

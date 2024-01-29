@@ -15,7 +15,7 @@ interface FAQService {
 
     fun getFAQById(faqId: Long): FAQ
 
-    fun getFAQsByCategory(category: Category): List<FAQ>
+    fun getFAQsByCategory(category: Category, pageable: Pageable): Page<FAQ>
 
     fun updateFAQ(clientId: Long, faqId: Long, faqUpdateRequestDto: FAQUpdateRequestDto): FAQ
 
