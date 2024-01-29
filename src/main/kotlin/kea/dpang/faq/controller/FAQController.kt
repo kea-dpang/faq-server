@@ -10,6 +10,8 @@ import kea.dpang.faq.dto.FAQResponseDto
 import kea.dpang.faq.dto.FAQUpdateRequestDto
 import kea.dpang.faq.entity.Category
 import kea.dpang.faq.service.FAQService
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.access.prepost.PreAuthorize
@@ -58,6 +60,23 @@ class FAQController(private val faqService: FAQService) {
             status = HttpStatus.OK.value(),
             message = "FAQ를 성공적으로 조회하였습니다.",
             data = FAQResponseDto.from(faq)
+        )
+
+        return ResponseEntity(successResponse, HttpStatus.OK)
+    }
+
+    @Operation(summary = "FAQ 전체 조회", description = "모든 FAQ를 페이지 단위로 조회합니다.")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN','SUPER_ADMIN')")
+    @GetMapping
+    fun readAllFAQs(pageable: Pageable): ResponseEntity<SuccessResponse<Page<FAQResponseDto>>> {
+
+        val faqsPage = faqService.getAllFAQs(pageable)
+
+        // 응답 성공 객체 생성
+        val successResponse = SuccessResponse(
+            status = HttpStatus.OK.value(),
+            message = "FAQ를 성공적으로 조회하였습니다.",
+            data = faqsPage.map { FAQResponseDto.from(it) }
         )
 
         return ResponseEntity(successResponse, HttpStatus.OK)

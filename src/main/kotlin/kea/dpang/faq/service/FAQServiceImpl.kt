@@ -7,6 +7,8 @@ import kea.dpang.faq.entity.FAQ
 import kea.dpang.faq.exception.FAQNotFoundException
 import kea.dpang.faq.repository.FAQRepository
 import org.slf4j.LoggerFactory
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.util.*
@@ -33,6 +35,15 @@ class FAQServiceImpl(
         // Post를 저장하고 반환한다.
         return faqRepository.save(FAQ).also {
             logger.info("[FAQ 생성 완료] 생성된 FAQ ID: ${it.id}")
+        }
+    }
+
+    @Transactional(readOnly = true)
+    override fun getAllFAQs(pageable: Pageable): Page<FAQ> {
+        logger.info("[FAQ 전체 조회]")
+
+        return faqRepository.findAll(pageable).also {
+            logger.info("[FAQ 전체 조회 완료] 조회된 FAQ 페이지: ${it.number + 1}, 페이지당 FAQ 개수: ${it.size}, 전체 FAQ 개수: ${it.totalElements}")
         }
     }
 
