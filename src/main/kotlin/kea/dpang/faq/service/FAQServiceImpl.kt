@@ -25,7 +25,7 @@ class FAQServiceImpl(
         logger.info("[FAQ 생성] 사용자 ID: $userId, FAQ 정보: $faqCreateRequestDto")
 
         // 새로운 게시글을 생성한다.
-        val FAQ = FAQ(
+        val faq = FAQ(
             question = faqCreateRequestDto.question,
             answer = faqCreateRequestDto.answer,
             category = faqCreateRequestDto.category,
@@ -33,7 +33,7 @@ class FAQServiceImpl(
         )
 
         // Post를 저장하고 반환한다.
-        return faqRepository.save(FAQ).also {
+        return faqRepository.save(faq).also {
             logger.info("[FAQ 생성 완료] 생성된 FAQ ID: ${it.id}")
         }
     }
