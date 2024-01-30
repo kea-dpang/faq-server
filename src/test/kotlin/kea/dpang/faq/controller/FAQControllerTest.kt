@@ -1,8 +1,8 @@
 package kea.dpang.faq.controller
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import kea.dpang.faq.dto.FAQCreateRequestDto
-import kea.dpang.faq.dto.FAQUpdateRequestDto
+import kea.dpang.faq.dto.CreateFAQRequestDto
+import kea.dpang.faq.dto.UpdateFAQRequestDto
 import kea.dpang.faq.entity.Category
 import kea.dpang.faq.entity.FAQ
 import kea.dpang.faq.repository.FAQRepository
@@ -20,7 +20,6 @@ import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import java.time.LocalDateTime
-import java.util.*
 import kotlin.random.Random
 
 @SpringBootTest
@@ -38,13 +37,13 @@ class FAQControllerTest {
 
     private val clientId = Random.nextLong()
 
-    private val postCreateDto = FAQCreateRequestDto(
+    private val postCreateDto = CreateFAQRequestDto(
         question = "Kotest란 무엇인가요?",
         answer = "Kotest는 Kotlin용 유연하고 포괄적인 테스트 도구입니다.",
         category = Category.ETC
     )
 
-    val postUpdateDto = FAQUpdateRequestDto(
+    val postUpdateDto = UpdateFAQRequestDto(
         question = "수정된 질문",
         answer = "수정된 답변",
         category = Category.FAQ

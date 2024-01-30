@@ -5,9 +5,10 @@ import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.tags.Tag
 import kea.dpang.faq.base.BaseResponse
 import kea.dpang.faq.base.SuccessResponse
-import kea.dpang.faq.dto.FAQCreateRequestDto
+import kea.dpang.faq.dto.DeleteFAQsRequest
+import kea.dpang.faq.dto.CreateFAQRequestDto
 import kea.dpang.faq.dto.FAQResponseDto
-import kea.dpang.faq.dto.FAQUpdateRequestDto
+import kea.dpang.faq.dto.UpdateFAQRequestDto
 import kea.dpang.faq.entity.Category
 import kea.dpang.faq.service.FAQService
 import org.springframework.data.domain.Page
@@ -29,7 +30,7 @@ class FAQController(private val faqService: FAQService) {
         @Parameter(hidden = true)
         @RequestHeader("X-DPANG-CLIENT-ID") clientId: Long,
         @Parameter(description = "FAQ 생성 정보")
-        @RequestBody faqCreateDto: FAQCreateRequestDto
+        @RequestBody faqCreateDto: CreateFAQRequestDto
     ): ResponseEntity<SuccessResponse<FAQResponseDto>> {
 
         val createdFAQ = faqService.createFAQ(clientId, faqCreateDto)
@@ -119,7 +120,7 @@ class FAQController(private val faqService: FAQService) {
         @Parameter(description = "수정할 FAQ의 ID")
         @PathVariable faqId: Long,
         @Parameter(description = "FAQ 수정 정보")
-        @RequestBody faqUpdateDto: FAQUpdateRequestDto
+        @RequestBody faqUpdateDto: UpdateFAQRequestDto
     ): ResponseEntity<SuccessResponse<FAQResponseDto>> {
 
         val updatedFAQ = faqService.updateFAQ(clientId, faqId, faqUpdateDto)
@@ -134,6 +135,10 @@ class FAQController(private val faqService: FAQService) {
         return ResponseEntity(successResponse, HttpStatus.OK)
     }
 
+    @Deprecated(
+        message = "여러 FAQ 삭제로 대체되었습니다.",
+        replaceWith = ReplaceWith("deleteFAQs")
+    )
     @Operation(summary = "FAQ 삭제", description = "관리자 권한을 가진 사용자가 특정 FAQ를 삭제합니다.")
     @PreAuthorize("hasAnyRole('ADMIN','SUPER_ADMIN')")
     @DeleteMapping("/{faqId}")
@@ -148,6 +153,25 @@ class FAQController(private val faqService: FAQService) {
         val successResponse = BaseResponse(
             status = HttpStatus.OK.value(),
             message = "FAQ를 성공적으로 삭제하였습니다."
+        )
+
+        return ResponseEntity(successResponse, HttpStatus.OK)
+    }
+
+    @Operation(summary = "여러 FAQ 삭제", description = "관리자 권한을 가진 사용자가 여러 FAQ를 한 번에 삭제합니다.")
+    @PreAuthorize("hasAnyRole('ADMIN','SUPER_ADMIN')")
+    @DeleteMapping("/list")
+    fun deleteFAQs(
+        @Parameter(description = "삭제할 FAQ들의 ID 리스트")
+        @RequestBody request: DeleteFAQsRequest
+    ): ResponseEntity<BaseResponse> {
+
+        faqService.deleteFAQs(request.faqIds)
+
+        // 응답 성공 객체 생성
+        val successResponse = BaseResponse(
+            status = HttpStatus.OK.value(),
+            message = "FAQ들을 성공적으로 삭제하였습니다."
         )
 
         return ResponseEntity(successResponse, HttpStatus.OK)
