@@ -100,4 +100,21 @@ class FAQServiceImpl(
         }
     }
 
+    override fun deleteFAQs(faqIds: List<Long>) {
+        // 해당 요청은 관리자 전용 요청으로, 기존 작성자와 같지 않더라도 게시글 삭제 요청을 할 수 있음
+        //  -> 사용자 비교 X
+
+        // 삭제하려는 모든 FAQ가 존재하는지 확인
+        faqIds.forEach { faqId ->
+            if (!faqRepository.existsById(faqId)) {
+                logger.warn("ID가 ${faqId}인 FAQ가 존재하지 않습니다.")
+                throw FAQNotFoundException(faqId)
+            }
+        }
+
+        // 모든 FAQ가 존재하므로 삭제 수행
+        faqRepository.deleteByIdIn(faqIds)
+        logger.info("ID가 ${faqIds}인 FAQ들이 성공적으로 삭제되었습니다.")
+    }
+
 }

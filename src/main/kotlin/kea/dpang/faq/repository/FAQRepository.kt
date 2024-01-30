@@ -11,4 +11,6 @@ import org.springframework.stereotype.Repository
 interface FAQRepository : JpaRepository<FAQ, Long> {
 
     fun findByCategory(category: Category, pageable: Pageable): Page<FAQ>
+
+    fun deleteByIdIn(ids: List<Long>)
 }

@@ -21,4 +21,6 @@ interface FAQService {
 
     fun deleteFAQ(faqId: Long)
 
+    fun deleteFAQs(faqIds: List<Long>)
+
 }
