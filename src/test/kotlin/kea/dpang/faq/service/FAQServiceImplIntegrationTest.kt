@@ -1,13 +1,14 @@
 package kea.dpang.faq.service
 
-import kea.dpang.faq.dto.FAQCreateRequestDto
-import kea.dpang.faq.dto.FAQUpdateRequestDto
+import kea.dpang.faq.dto.CreateFAQRequestDto
+import kea.dpang.faq.dto.UpdateFAQRequestDto
 import kea.dpang.faq.entity.Category
 import kea.dpang.faq.exception.FAQNotFoundException
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.data.domain.Pageable
 import org.springframework.transaction.annotation.Transactional
 import kotlin.random.Random
 
@@ -22,7 +23,7 @@ class FAQServiceImplIntegrationTest {
     fun `게시글 생성 테스트`() {
         // Given: 새로운 게시글을 생성하기 위한 DTO로
         val userId = Random.nextLong()
-        val postCreateDto = FAQCreateRequestDto(Category.FAQ, "질문", "답변")
+        val postCreateDto = CreateFAQRequestDto(Category.FAQ, "질문", "답변")
 
         // When: 새로운 게시글을 생성했을 때
         val post = postService.createFAQ(userId, postCreateDto)
@@ -46,13 +47,13 @@ class FAQServiceImplIntegrationTest {
     fun `특정 카테고리 게시글 검색 테스트`() {
         // Given: FAQ 카테고리, Notice 카테고리에 각각 한 개의 게시글이 존재할 때
         val userId = Random.nextLong()
-        val postCreateDto1 = FAQCreateRequestDto(Category.FAQ, "질문1", "답변1")
-        val postCreateDto2 = FAQCreateRequestDto(Category.MEMBER, "질문2", "답변2")
+        val postCreateDto1 = CreateFAQRequestDto(Category.FAQ, "질문1", "답변1")
+        val postCreateDto2 = CreateFAQRequestDto(Category.MEMBER, "질문2", "답변2")
         postService.createFAQ(userId, postCreateDto1)
         postService.createFAQ(userId, postCreateDto2)
 
         // When: FAQ 카테고리에 속하는 게시글을 검색하면
-        val postsInFaq = postService.getFAQsByCategory(Category.FAQ)
+        val postsInFaq = postService.getFAQsByCategory(Category.FAQ, Pageable.unpaged())
 
         // Then: 검색된 게시글이 null이 아니며, 검색된 게시글의 카테고리가 모두 FAQ여야 한다
         Assertions.assertNotNull(postsInFaq)
@@ -70,9 +71,9 @@ class FAQServiceImplIntegrationTest {
     fun `게시글 수정 테스트`() {
         // Given: 게시글을
         val userId = Random.nextLong()
-        val postCreateDto = FAQCreateRequestDto(Category.FAQ, "질문", "답변")
+        val postCreateDto = CreateFAQRequestDto(Category.FAQ, "질문", "답변")
         val createdPost = postService.createFAQ(userId, postCreateDto)
-        val postUpdateDto = FAQUpdateRequestDto(Category.FAQ, "수정된 질문", "수정된 답변")
+        val postUpdateDto = UpdateFAQRequestDto(Category.FAQ, "수정된 질문", "수정된 답변")
 
         // When: 수정했을 때
         val updatedPost = postService.updateFAQ(userId, createdPost.id!!, postUpdateDto)
@@ -94,7 +95,7 @@ class FAQServiceImplIntegrationTest {
     fun `게시글 삭제 테스트`() {
         // Given: 게시글을
         val userId = Random.nextLong()
-        val postCreateDto = FAQCreateRequestDto(Category.FAQ, "질문", "답변")
+        val postCreateDto = CreateFAQRequestDto(Category.FAQ, "질문", "답변")
         val createdPost = postService.createFAQ(userId, postCreateDto)
 
         // When: 삭제했을 때

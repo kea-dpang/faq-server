@@ -6,9 +6,9 @@ import io.swagger.v3.oas.annotations.tags.Tag
 import kea.dpang.faq.base.BaseResponse
 import kea.dpang.faq.base.SuccessResponse
 import kea.dpang.faq.dto.DeleteFAQsRequest
-import kea.dpang.faq.dto.FAQCreateRequestDto
+import kea.dpang.faq.dto.CreateFAQRequestDto
 import kea.dpang.faq.dto.FAQResponseDto
-import kea.dpang.faq.dto.FAQUpdateRequestDto
+import kea.dpang.faq.dto.UpdateFAQRequestDto
 import kea.dpang.faq.entity.Category
 import kea.dpang.faq.service.FAQService
 import org.springframework.data.domain.Page
@@ -30,7 +30,7 @@ class FAQController(private val faqService: FAQService) {
         @Parameter(hidden = true)
         @RequestHeader("X-DPANG-CLIENT-ID") clientId: Long,
         @Parameter(description = "FAQ 생성 정보")
-        @RequestBody faqCreateDto: FAQCreateRequestDto
+        @RequestBody faqCreateDto: CreateFAQRequestDto
     ): ResponseEntity<SuccessResponse<FAQResponseDto>> {
 
         val createdFAQ = faqService.createFAQ(clientId, faqCreateDto)
@@ -120,7 +120,7 @@ class FAQController(private val faqService: FAQService) {
         @Parameter(description = "수정할 FAQ의 ID")
         @PathVariable faqId: Long,
         @Parameter(description = "FAQ 수정 정보")
-        @RequestBody faqUpdateDto: FAQUpdateRequestDto
+        @RequestBody faqUpdateDto: UpdateFAQRequestDto
     ): ResponseEntity<SuccessResponse<FAQResponseDto>> {
 
         val updatedFAQ = faqService.updateFAQ(clientId, faqId, faqUpdateDto)

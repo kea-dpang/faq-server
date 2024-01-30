@@ -2,7 +2,7 @@ package kea.dpang.faq.entity
 
 import jakarta.persistence.*
 import kea.dpang.faq.base.BaseEntity
-import kea.dpang.faq.dto.FAQUpdateRequestDto
+import kea.dpang.faq.dto.UpdateFAQRequestDto
 
 @Entity
 @Table(name = "faq")
@@ -28,7 +28,7 @@ class FAQ(
 
 ) : BaseEntity() {
 
-    fun update(dto: FAQUpdateRequestDto) {
+    fun update(dto: UpdateFAQRequestDto) {
         this.question = dto.question
         this.answer = dto.answer
         this.category = dto.category

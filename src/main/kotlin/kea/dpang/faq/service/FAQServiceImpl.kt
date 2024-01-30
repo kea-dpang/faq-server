@@ -1,7 +1,7 @@
 package kea.dpang.faq.service
 
-import kea.dpang.faq.dto.FAQCreateRequestDto
-import kea.dpang.faq.dto.FAQUpdateRequestDto
+import kea.dpang.faq.dto.CreateFAQRequestDto
+import kea.dpang.faq.dto.UpdateFAQRequestDto
 import kea.dpang.faq.entity.Category
 import kea.dpang.faq.entity.FAQ
 import kea.dpang.faq.exception.FAQNotFoundException
@@ -20,14 +20,14 @@ class FAQServiceImpl(
 
     private val logger = LoggerFactory.getLogger(FAQServiceImpl::class.java)
 
-    override fun createFAQ(userId: Long, faqCreateRequestDto: FAQCreateRequestDto): FAQ {
-        logger.info("[FAQ 생성] 사용자 ID: $userId, FAQ 정보: $faqCreateRequestDto")
+    override fun createFAQ(userId: Long, createFAQRequestDto: CreateFAQRequestDto): FAQ {
+        logger.info("[FAQ 생성] 사용자 ID: $userId, FAQ 정보: $createFAQRequestDto")
 
         // 새로운 게시글을 생성한다.
         val faq = FAQ(
-            question = faqCreateRequestDto.question,
-            answer = faqCreateRequestDto.answer,
-            category = faqCreateRequestDto.category,
+            question = createFAQRequestDto.question,
+            answer = createFAQRequestDto.answer,
+            category = createFAQRequestDto.category,
             authorId = userId
         )
 
@@ -66,8 +66,8 @@ class FAQServiceImpl(
         }
     }
 
-    override fun updateFAQ(clientId: Long, faqId: Long, faqUpdateRequestDto: FAQUpdateRequestDto): FAQ {
-        logger.info("[FAQ 수정] 클라이언트 ID: $clientId, 수정 요청 FAQ ID: $faqId, 수정 정보: $faqUpdateRequestDto")
+    override fun updateFAQ(clientId: Long, faqId: Long, updateFAQRequestDto: UpdateFAQRequestDto): FAQ {
+        logger.info("[FAQ 수정] 클라이언트 ID: $clientId, 수정 요청 FAQ ID: $faqId, 수정 정보: $updateFAQRequestDto")
 
         // 게시글 조회. 없는 경우 예외 발생
         val post = faqRepository.findById(faqId)
@@ -77,7 +77,7 @@ class FAQServiceImpl(
         //  -> 사용자 비교 X
 
         // 게시글 내용 업데이트
-        post.update(faqUpdateRequestDto)
+        post.update(updateFAQRequestDto)
 
         return faqRepository.save(post).also {
             logger.info("[FAQ 수정 완료] 수정된 FAQ 정보: $it")
