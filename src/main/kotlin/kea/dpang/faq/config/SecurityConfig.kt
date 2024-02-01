@@ -68,7 +68,7 @@ class SecurityConfig {
                     response.writer.write(responseBody)
                 }
             } // 인증되지 않은 사용자가 보호된 리소스에 접근하려고 시도하면 401 Unauthorized를 반환하도록 설정
-            .authorizeHttpRequests { it.anyRequest().authenticated() } // 모든 요청이 인증을 필요로 하도록 설정
+            .authorizeHttpRequests { it.anyRequest().permitAll() } // 모든 요청이 인증을 필요로 하도록 설정
             .build()
     }
 }
